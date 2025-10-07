@@ -9,6 +9,7 @@ import type {
 import { NodeConnectionTypes } from 'n8n-workflow';
 import { ChatOpenAI } from '@langchain/openai';
 import { getConnectionHintNoticeField } from './methods/sharedFields';
+import { N8nLlmTracing } from '../N8nLlmTracing';
 
 export class ModelScopeChain implements INodeType {
 	description: INodeTypeDescription = {
@@ -263,7 +264,10 @@ export class ModelScopeChain implements INodeType {
 			config.topP = options.topP;
 		}
 
-		const model = new ChatOpenAI(config);
+		const model = new ChatOpenAI({
+			...config,
+			callbacks: [new N8nLlmTracing(this)],
+		});
 
 		return {
 			response: model,
