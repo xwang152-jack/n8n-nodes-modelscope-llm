@@ -42,14 +42,23 @@ export async function executeTextToImage(
 		let attempts = 0;
 		const maxAttempts = timeout * 12; // 每5秒检查一次，timeout分钟内完成
 		const pollInterval = 5000; // 5秒
+		const startTime = Date.now();
 
 		while (attempts < maxAttempts) {
 			const statusResponse = await client.getTaskStatus(taskId, accessToken) as any;
+			
+			// 记录轮询状态
+			const progress = Math.round((attempts / maxAttempts) * 100);
+			const elapsedTime = Math.round((Date.now() - startTime) / 1000);
+			
+			console.log(`[${new Date().toISOString()}] 图像生成进度: ${progress}% - 状态: ${statusResponse.task_status} (尝试 ${attempts + 1}/${maxAttempts}, 已用时: ${elapsedTime}秒)`);
 
 			if (statusResponse.task_status === 'SUCCEED') {
+				const processingTime = Math.round((Date.now() - startTime) / 1000);
 				return {
 					task_id: taskId,
 					status: 'completed',
+					progress: 100,
 					model,
 					prompt,
 					negative_prompt: negativePrompt,
@@ -57,9 +66,16 @@ export async function executeTextToImage(
 					steps,
 					images: statusResponse.output_images || [],
 					created_at: new Date().toISOString(),
+					processing_time: `${processingTime}秒`,
+					attempts_used: attempts + 1,
 				};
 			} else if (statusResponse.task_status === 'FAILED') {
 				throw new Error(`图像生成失败: ${statusResponse.error_message || '未知错误'}`);
+			} else if (statusResponse.task_status === 'RUNNING') {
+				// 返回进度状态（如果需要中间状态）
+				console.log(`任务正在处理中... 进度: ${progress}%, 已用时: ${elapsedTime}秒`);
+			} else if (statusResponse.task_status === 'PENDING') {
+				console.log(`任务排队中... 进度: ${progress}%, 已用时: ${elapsedTime}秒`);
 			}
 
 			// 等待后重试
