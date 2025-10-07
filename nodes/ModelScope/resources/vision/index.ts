@@ -52,7 +52,7 @@ export const visionFields: INodeProperties[] = [
 			},
 		},
 		options: getModelOptions('vision'),
-		default: 'Qwen/QVQ-72B-Preview',
+		default: 'Qwen/Qwen3-VL-30B-A3B-Instruct',
 		required: true,
 		description: '选择要使用的视觉模型',
 	},
