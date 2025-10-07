@@ -266,7 +266,7 @@ export class ModelScopeChain implements INodeType {
 
 		const model = new ChatOpenAI({
 			...config,
-			callbacks: [new N8nLlmTracing(this)],
+			callbacks: [new N8nLlmTracing(this as ISupplyDataFunctions)],
 		});
 
 		return {
