@@ -1,0 +1,34 @@
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- White rounded background -->
+  <rect width="60" height="60" rx="12" ry="12" fill="white"/>
+  
+  <!-- Left side T-shape structure -->
+  <!-- Top horizontal bar of T -->
+  <rect x="6" y="6" width="18" height="6" fill="#5D4EFF"/>
+  <!-- Vertical stem of T -->
+  <rect x="12" y="12" width="6" height="18" fill="#5D4EFF"/>
+  
+  <!-- Left cyan accent block -->
+  <rect x="6" y="18" width="6" height="6" fill="#4ECDC4"/>
+  
+  <!-- Bottom left L-shape connection -->
+  <rect x="6" y="42" width="12" height="6" fill="#5D4EFF"/>
+  <rect x="12" y="36" width="6" height="6" fill="#5D4EFF"/>
+  
+  <!-- Center cyan blocks -->
+  <rect x="27" y="18" width="6" height="6" fill="#4ECDC4"/>
+  <rect x="27" y="30" width="6" height="6" fill="#4ECDC4"/>
+  
+  <!-- Right side T-shape structure (mirrored) -->
+  <!-- Top horizontal bar of T -->
+  <rect x="36" y="6" width="18" height="6" fill="#5D4EFF"/>
+  <!-- Vertical stem of T -->
+  <rect x="42" y="12" width="6" height="18" fill="#5D4EFF"/>
+  
+  <!-- Right cyan accent block -->
+  <rect x="48" y="18" width="6" height="6" fill="#4ECDC4"/>
+  
+  <!-- Bottom right L-shape connection -->
+  <rect x="42" y="42" width="12" height="6" fill="#5D4EFF"/>
+  <rect x="42" y="36" width="6" height="6" fill="#5D4EFF"/>
+</svg>

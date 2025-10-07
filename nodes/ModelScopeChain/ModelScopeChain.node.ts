@@ -36,7 +36,6 @@ export class ModelScopeChain implements INodeType {
 		},
 		// eslint-disable-next-line n8n-nodes-base/node-class-description-inputs-wrong-regular-node
 		inputs: [],
-		// eslint-disable-next-line n8n-nodes-base/node-class-description-outputs-wrong-regular-node
 		outputs: [NodeConnectionTypes.AiLanguageModel],
 		outputNames: ['Model'],
 		credentials: [
@@ -228,7 +227,7 @@ export class ModelScopeChain implements INodeType {
 		};
 
 		const config: any = {
-			apiKey: credentials.apiKey as string,
+			apiKey: credentials.accessToken as string,
 			model: modelName,
 			configuration: {
 				baseURL: options.baseURL || 'https://api-inference.modelscope.cn/v1',

@@ -1,5 +1,6 @@
 import type {
 	IAuthenticateGeneric,
+	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
@@ -31,5 +32,27 @@ export class ModelScopeApi implements ICredentialType {
 				'Content-Type': 'application/json',
 			},
 		},
+	};
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://api-inference.modelscope.cn',
+			url: '/v1/models',
+			method: 'GET',
+			headers: {
+				'Authorization': '=Bearer {{$credentials.accessToken}}',
+				'Content-Type': 'application/json',
+			},
+		},
+		rules: [
+			{
+				type: 'responseSuccessBody',
+				properties: {
+					message: 'ModelScope API 连接测试成功',
+					key: 'data',
+					value: 'array',
+				},
+			},
+		],
 	};
 }
