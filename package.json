@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-modelscope-llm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "n8n node for ModelScope API-Inference services including LLM, Vision, and Text-to-Image models",
   "keywords": [
     "n8n-community-node-package",
@@ -42,7 +42,8 @@
       "dist/credentials/ModelScopeApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ModelScope/ModelScope.node.js"
+      "dist/nodes/ModelScope/ModelScope.node.js",
+      "dist/nodes/ModelScopeChain/ModelScopeChain.node.js"
     ]
   },
   "devDependencies": {
@@ -54,7 +55,10 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "openai": "^4.0.0"
+    "openai": "^4.0.0",
+    "@langchain/openai": "^0.3.0",
+    "@langchain/core": "^0.3.0",
+    "langchain": "^0.3.0"
   },
   "peerDependencies": {
     "n8n-workflow": "*"

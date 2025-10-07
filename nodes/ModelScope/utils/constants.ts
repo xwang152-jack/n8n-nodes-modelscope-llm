@@ -2,8 +2,14 @@
 export const SUPPORTED_MODELS = {
 	llm: [
 		'ZhipuAI/GLM-4.6',
+		'ZhipuAI/GLM-4.5',
 		'deepseek-ai/DeepSeek-V3.1',
+		'deepseek-ai/DeepSeek-R1-0528',
 		'Qwen/Qwen3-235B-A22B-Instruct-2507',
+		'Qwen/Qwen3-235B-A22B-Thinking-2507',
+		'Qwen/Qwen3-Next-80B-A3B-Instruct',
+		'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+		'Qwen/Qwen3-Next-80B-A3B-Thinking',
 	],
 	vision: [
 		'Qwen/Qwen3-VL-235B-A22B-Instruct',

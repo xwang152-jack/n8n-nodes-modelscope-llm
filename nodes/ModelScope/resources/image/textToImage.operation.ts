@@ -28,8 +28,7 @@ export async function executeTextToImage(
 			model,
 			prompt,
 			negative_prompt: negativePrompt,
-			width: parseInt(size.split('x')[0]),
-			height: parseInt(size.split('x')[1]),
+			size: size,
 			num_inference_steps: steps,
 			guidance_scale: 7.5,
 		}, accessToken) as any;
