@@ -9,6 +9,7 @@ export async function searchModels(
 	const mockModels = [
 		{ id: 'ZhipuAI/GLM-4.6', name: 'GLM-4.6' },
 		{ id: 'ZhipuAI/GLM-4.5', name: 'GLM-4.5' },
+		{ id: 'deepseek-ai/DeepSeek-V3.2-Exp', name: 'DeepSeek-V3.2-Exp' },
 		{ id: 'deepseek-ai/DeepSeek-V3.1', name: 'DeepSeek-V3.1' },
 		{ id: 'deepseek-ai/DeepSeek-R1-0528', name: 'DeepSeek-R1-0528' },
 		{ id: 'Qwen/Qwen3-235B-A22B-Instruct-2507', name: 'Qwen3-235B-A22B-Instruct-2507' },
