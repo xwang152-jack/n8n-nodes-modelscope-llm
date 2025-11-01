@@ -6,6 +6,7 @@ export const SUPPORTED_MODELS = {
 		'deepseek-ai/DeepSeek-V3.2-Exp',
 		'deepseek-ai/DeepSeek-V3.1',
 		'deepseek-ai/DeepSeek-R1-0528',
+		'MiniMax/MiniMax-M2',
 		'Qwen/Qwen3-235B-A22B-Instruct-2507',
 		'Qwen/Qwen3-235B-A22B-Thinking-2507',
 		'Qwen/Qwen3-Next-80B-A3B-Instruct',

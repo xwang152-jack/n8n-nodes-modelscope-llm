@@ -12,6 +12,7 @@ export async function searchModels(
 		{ id: 'deepseek-ai/DeepSeek-V3.2-Exp', name: 'DeepSeek-V3.2-Exp' },
 		{ id: 'deepseek-ai/DeepSeek-V3.1', name: 'DeepSeek-V3.1' },
 		{ id: 'deepseek-ai/DeepSeek-R1-0528', name: 'DeepSeek-R1-0528' },
+		{ id: 'MiniMax/MiniMax-M2', name: 'MiniMax-M2' },
 		{ id: 'Qwen/Qwen3-235B-A22B-Instruct-2507', name: 'Qwen3-235B-A22B-Instruct-2507' },
 		{ id: 'Qwen/Qwen3-235B-A22B-Thinking-2507', name: 'Qwen3-235B-A22B-Thinking-2507' },
 		{ id: 'Qwen/Qwen3-Next-80B-A3B-Instruct', name: 'Qwen3-Next-80B-A3B-Instruct' },
