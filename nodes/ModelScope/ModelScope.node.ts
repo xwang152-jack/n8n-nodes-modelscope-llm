@@ -12,6 +12,7 @@ import { imageOperations, imageFields } from './resources/image';
 import { executeChatCompletion } from './resources/llm/chatCompletion.operation';
 import { executeVisionChat } from './resources/vision/visionChat.operation';
 import { executeTextToImage } from './resources/image/textToImage.operation';
+import { MODELSCOPE_BASE_URL } from './utils/constants';
 
 export class ModelScope implements INodeType {
 	description: INodeTypeDescription = {
@@ -33,12 +34,12 @@ export class ModelScope implements INodeType {
 				required: true,
 			},
 		],
-		requestDefaults: {
-			baseURL: 'https://api-inference.modelscope.cn/v1',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		},
+        requestDefaults: {
+            baseURL: MODELSCOPE_BASE_URL,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        },
 		properties: [
 			// 资源选择
 			{

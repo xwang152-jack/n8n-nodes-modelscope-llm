@@ -10,6 +10,7 @@ import { NodeConnectionTypes } from 'n8n-workflow';
 import { ChatOpenAI } from '@langchain/openai';
 import { getConnectionHintNoticeField } from './methods/sharedFields';
 import { N8nLlmTracing } from '../N8nLlmTracing';
+import { MODELSCOPE_BASE_URL } from '../ModelScope/utils/constants';
 
 export class ModelScopeChain implements INodeType {
 	description: INodeTypeDescription = {
@@ -45,12 +46,12 @@ export class ModelScopeChain implements INodeType {
 				required: true,
 			},
 		],
-		requestDefaults: {
-			baseURL: 'https://api-inference.modelscope.cn/v1',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		},
+        requestDefaults: {
+            baseURL: MODELSCOPE_BASE_URL,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        },
 		properties: [
 			getConnectionHintNoticeField([NodeConnectionTypes.AiAgent, NodeConnectionTypes.AiChain]),
 			{
@@ -88,12 +89,12 @@ export class ModelScopeChain implements INodeType {
 				default: {},
 				options: [
 					{
-						displayName: 'Base URL',
-						name: 'baseURL',
-						default: 'https://api-inference.modelscope.cn/v1',
-						description: 'Override the default base URL for the API',
-						type: 'string',
-					},
+                        displayName: 'Base URL',
+                        name: 'baseURL',
+                        default: MODELSCOPE_BASE_URL,
+                        description: 'Override the default base URL for the API',
+                        type: 'string',
+                    },
 					{
 						displayName: 'Frequency Penalty',
 						name: 'frequencyPenalty',
@@ -231,9 +232,9 @@ export class ModelScopeChain implements INodeType {
 			apiKey: credentials.accessToken as string,
 			model: modelName,
 			configuration: {
-				baseURL: options.baseURL || 'https://api-inference.modelscope.cn/v1',
-			},
-		};
+                baseURL: options.baseURL || MODELSCOPE_BASE_URL,
+            },
+        };
 
 		// Add optional parameters if they are set
 		if (options.frequencyPenalty !== undefined) {

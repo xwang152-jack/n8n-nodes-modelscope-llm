@@ -22,6 +22,8 @@ export const SUPPORTED_MODELS = {
 	],
 };
 
+export const MODELSCOPE_BASE_URL = 'https://api-inference.modelscope.cn/v1';
+
 // 模型选项生成器
 export const getModelOptions = (modelType: keyof typeof SUPPORTED_MODELS) => {
 	return SUPPORTED_MODELS[modelType].map(model => ({

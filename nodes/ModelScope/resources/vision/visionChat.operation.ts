@@ -1,4 +1,5 @@
 import type { IExecuteFunctions } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { ModelScopeClient } from '../../utils/apiClient';
 import { ModelScopeErrorHandler } from '../../utils/errorHandler';
@@ -20,14 +21,14 @@ export async function executeVisionChat(
 		const maxTokens = this.getNodeParameter('maxTokens', itemIndex, 2048) as number;
 
 		// 验证输入
-		if (!imageUrl.trim()) {
-			throw new Error('图片URL不能为空');
-		}
-		if (!prompt.trim()) {
-			throw new Error('提示词不能为空');
-		}
+        if (!imageUrl.trim()) {
+            throw new NodeOperationError(this.getNode(), '图片URL不能为空');
+        }
+        if (!prompt.trim()) {
+            throw new NodeOperationError(this.getNode(), '提示词不能为空');
+        }
 
-		console.log(`[${new Date().toISOString()}] 开始视觉对话 - 模型: ${model}, 图片: ${imageUrl.substring(0, 50)}...`);
+        this.logger.info(`开始视觉对话 - 模型: ${model}, 图片: ${imageUrl.substring(0, 50)}...`);
 
 		// 构建视觉聊天消息
 		const messages: ChatCompletionMessageParam[] = [
@@ -57,9 +58,8 @@ export async function executeVisionChat(
 
 		// 非流式响应
 		const chatResponse = response as any;
-		const processingTime = Math.round((Date.now() - startTime) / 1000);
-		
-		console.log(`[${new Date().toISOString()}] 视觉对话完成 - 用时: ${processingTime}秒, tokens: ${chatResponse.usage?.total_tokens || 0}`);
+        const processingTime = Math.round((Date.now() - startTime) / 1000);
+        this.logger.info(`视觉对话完成 - 用时: ${processingTime}秒, tokens: ${chatResponse.usage?.total_tokens || 0}`);
 		
 		return {
 			id: chatResponse.id,
@@ -77,9 +77,9 @@ export async function executeVisionChat(
 			image_url: imageUrl,
 			completed_at: new Date().toISOString(),
 		};
-	} catch (error: any) {
-		const processingTime = Math.round((Date.now() - startTime) / 1000);
-		console.error(`[${new Date().toISOString()}] 视觉对话失败 - 用时: ${processingTime}秒, 错误: ${error.message}`);
-		throw ModelScopeErrorHandler.handleApiError(error);
-	}
+    } catch (error: any) {
+        const processingTime = Math.round((Date.now() - startTime) / 1000);
+        this.logger.error(`视觉对话失败 - 用时: ${processingTime}秒, 错误: ${error.message}`);
+        throw ModelScopeErrorHandler.handleApiError(error);
+    }
 }

@@ -1,15 +1,19 @@
 import { OpenAI } from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import { MODELSCOPE_BASE_URL } from './constants';
+import { ModelScopeErrorHandler } from './errorHandler';
 
 export class ModelScopeClient {
-	private client: OpenAI;
+    private client: OpenAI;
+    private accessToken: string;
 
-	constructor(accessToken: string) {
-		this.client = new OpenAI({
-			apiKey: accessToken,
-			baseURL: 'https://api-inference.modelscope.cn/v1',
-		});
-	}
+    constructor(accessToken: string) {
+        this.accessToken = accessToken;
+        this.client = new OpenAI({
+            apiKey: accessToken,
+            baseURL: MODELSCOPE_BASE_URL,
+        });
+    }
 
 	async chatCompletion(params: {
 		model: string;
@@ -18,25 +22,21 @@ export class ModelScopeClient {
 		temperature?: number;
 		max_tokens?: number;
 	}) {
-		try {
-			return await this.client.chat.completions.create(params);
-		} catch (error: any) {
-			// Enhanced error handling for Vision models
-			if (error.response?.data) {
-				throw new Error(`ModelScope API Error: ${JSON.stringify(error.response.data)}`);
-			}
-			throw new Error(`ModelScope API Error: ${error.message || error}`);
-		}
-	}
+        try {
+            return await this.client.chat.completions.create(params);
+        } catch (error: any) {
+            throw ModelScopeErrorHandler.handleApiError(error);
+        }
+    }
 
-	async generateImage(params: {
-		model: string;
-		prompt: string;
-		negative_prompt?: string;
-		size?: string;
-		num_inference_steps?: number;
-		guidance_scale?: number;
-	}, accessToken: string) {
+    async generateImage(params: {
+        model: string;
+        prompt: string;
+        negative_prompt?: string;
+        size?: string;
+        num_inference_steps?: number;
+        guidance_scale?: number;
+    }) {
 		// 构建请求参数
 		const requestParams: any = {
 			model: params.model,
@@ -60,15 +60,15 @@ export class ModelScopeClient {
 			requestParams.guidance_scale = params.guidance_scale;
 		}
 
-		const response = await fetch('https://api-inference.modelscope.cn/v1/images/generations', {
-			method: 'POST',
-			headers: {
-				'Authorization': `Bearer ${accessToken}`,
-				'Content-Type': 'application/json',
-				'X-ModelScope-Async-Mode': 'true',
-			},
-			body: JSON.stringify(requestParams),
-		});
+        const response = await fetch(`${MODELSCOPE_BASE_URL}/images/generations`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`,
+                'Content-Type': 'application/json',
+                'X-ModelScope-Async-Mode': 'true',
+            },
+            body: JSON.stringify(requestParams),
+        });
 
 		if (!response.ok) {
 			let errorMessage = response.statusText;
@@ -84,14 +84,14 @@ export class ModelScopeClient {
 		return await response.json();
 	}
 
-	async getTaskStatus(taskId: string, accessToken: string) {
-		const response = await fetch(`https://api-inference.modelscope.cn/v1/tasks/${taskId}`, {
-			method: 'GET',
-			headers: {
-				'Authorization': `Bearer ${accessToken}`,
-				'X-ModelScope-Task-Type': 'image_generation',
-			},
-		});
+    async getTaskStatus(taskId: string) {
+        const response = await fetch(`${MODELSCOPE_BASE_URL}/tasks/${taskId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`,
+                'X-ModelScope-Task-Type': 'image_generation',
+            },
+        });
 
 		if (!response.ok) {
 			let errorMessage = response.statusText;
