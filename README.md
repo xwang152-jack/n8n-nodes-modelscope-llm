@@ -168,8 +168,11 @@ ModelScope Chat Model 节点专为 n8n AI 工作流设计，可与 AI Agent 和 
   - ZhipuAI/GLM-4.6
   - ZhipuAI/GLM-4.5
 - **DeepSeek 系列**:
+  - deepseek-ai/DeepSeek-V3.2-Exp
   - deepseek-ai/DeepSeek-V3.1
   - deepseek-ai/DeepSeek-R1-0528
+- **MiniMax 系列**:
+  - MiniMax/MiniMax-M2
 - **Qwen 系列**:
   - Qwen/Qwen3-235B-A22B-Instruct-2507
   - Qwen/Qwen3-235B-A22B-Thinking-2507
