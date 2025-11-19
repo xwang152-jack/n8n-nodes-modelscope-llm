@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-modelscope-llm",
+  "name": "n8n-nodes-modelscope",
   "version": "1.1.6",
   "description": "n8n node for ModelScope API-Inference services including LLM, Vision, and Text-to-Image models",
   "keywords": [
@@ -12,14 +12,14 @@
     "api-inference"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/xwang152-jack/n8n-nodes-modelscope-llm",
+  "homepage": "https://github.com/xwang152-jack/n8n-nodes-modelscope",
   "author": {
     "name": "xwang152-jack",
     "email": "xwang152@163.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xwang152-jack/n8n-nodes-modelscope-llm.git"
+    "url": "https://github.com/xwang152-jack/n8n-nodes-modelscope.git"
   },
   "engines": {
     "node": ">=20.15"

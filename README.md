@@ -1,6 +1,6 @@
-# n8n-nodes-modelscope-llm
+# n8n-nodes-modelscope
 
-[![npm version](https://badge.fury.io/js/n8n-nodes-modelscope-llm.svg)](https://badge.fury.io/js/n8n-nodes-modelscope-llm)
+[![npm version](https://badge.fury.io/js/n8n-nodes-modelscope.svg)](https://badge.fury.io/js/n8n-nodes-modelscope)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 这是一个用于 [n8n](https://n8n.io/) 的 ModelScope API 集成节点包，提供双节点架构支持大语言模型、视觉模型和文生图模型的调用，以及 AI Agent/Chain 集成功能。
@@ -35,14 +35,14 @@ AI Agent/Chain 集成节点，专为 n8n AI 工作流设计：
 ### 通过 npm 安装
 
 ```bash
-npm install n8n-nodes-modelscope-llm
+npm install n8n-nodes-modelscope
 ```
 
 ### 通过 n8n 社区节点安装
 
 1. 在 n8n 界面中，转到 **Settings** > **Community Nodes**
 2. 点击 **Install a community node**
-3. 输入 `n8n-nodes-modelscope-llm`
+3. 输入 `n8n-nodes-modelscope`
 4. 点击 **Install**
 
 ## 配置
@@ -209,8 +209,8 @@ ModelScope Chat Model 节点专为 n8n AI 工作流设计，可与 AI Agent 和 
 
 ```bash
 # 克隆仓库
-git clone https://github.com/xwang152-jack/n8n-nodes-modelscope-llm.git
-cd n8n-nodes-modelscope-llm
+git clone https://github.com/xwang152-jack/n8n-nodes-modelscope.git
+cd n8n-nodes-modelscope
 
 # 安装依赖
 npm install
@@ -221,13 +221,13 @@ npm run build
 # 链接到本地 n8n
 npm link
 cd ~/.n8n/nodes
-npm link n8n-nodes-modelscope-llm
+npm link n8n-nodes-modelscope
 ```
 
 ### 项目结构
 
 ```
-n8n-nodes-modelscope-llm/
+n8n-nodes-modelscope/
 ├── nodes/
 │   ├── ModelScope/                     # 传统 API 调用节点
 │   │   ├── ModelScope.node.ts          # 主节点文件
