@@ -24,6 +24,12 @@ export class ModelScopeClient {
         return this.client;
     }
 
+    private ensureAccessToken() {
+        if (!this.accessToken || !this.accessToken.trim()) {
+            throw new Error('认证失败: 未配置 ModelScope Access Token，请在凭据中填写并绑定节点');
+        }
+    }
+
 	async chatCompletion(params: {
 		model: string;
 		messages: ChatCompletionMessageParam[];
@@ -60,6 +66,7 @@ export class ModelScopeClient {
         num_inference_steps?: number;
         guidance_scale?: number;
     }) {
+        this.ensureAccessToken();
 		// 构建请求参数
 		const requestParams: any = {
 			model: params.model,
@@ -108,6 +115,7 @@ export class ModelScopeClient {
 	}
 
     async getTaskStatus(taskId: string) {
+        this.ensureAccessToken();
         const response = await fetch(`${MODELSCOPE_BASE_URL}/tasks/${taskId}`, {
             method: 'GET',
             headers: {

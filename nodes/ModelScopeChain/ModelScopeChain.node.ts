@@ -1,10 +1,11 @@
 import type {
-	ISupplyDataFunctions,
-	ILoadOptionsFunctions,
-	INodeType,
-	INodeTypeDescription,
-	SupplyData,
+    ISupplyDataFunctions,
+    ILoadOptionsFunctions,
+    INodeType,
+    INodeTypeDescription,
+    SupplyData,
 } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
 
 import { NodeConnectionTypes } from 'n8n-workflow';
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
@@ -292,15 +293,19 @@ export class ModelScopeChain implements INodeType {
 		},
 	};
 
-	async supplyData(this: ISupplyDataFunctions, itemIndex: number): Promise<SupplyData> {
-		const credentials = await this.getCredentials('modelScopeApi');
-		const mode = this.getNodeParameter('mode', itemIndex, 'chat') as 'chat' | 'embedding';
+    async supplyData(this: ISupplyDataFunctions, itemIndex: number): Promise<SupplyData> {
+        const credentials = await this.getCredentials('modelScopeApi');
+        const mode = this.getNodeParameter('mode', itemIndex, 'chat') as 'chat' | 'embedding';
 
-		const options = this.getNodeParameter('options', itemIndex, {}) as {
-			baseURL?: string;
-			frequencyPenalty?: number;
-			maxRetries?: number;
-			maxTokens?: number;
+        if (!credentials?.accessToken || !String(credentials.accessToken).trim()) {
+            throw new NodeOperationError(this.getNode(), '未配置 ModelScope Access Token，请在凭据中填写并绑定节点');
+        }
+
+        const options = this.getNodeParameter('options', itemIndex, {}) as {
+            baseURL?: string;
+            frequencyPenalty?: number;
+            maxRetries?: number;
+            maxTokens?: number;
 			presencePenalty?: number;
 			reasoningEffort?: string;
 			responseFormat?: string;
