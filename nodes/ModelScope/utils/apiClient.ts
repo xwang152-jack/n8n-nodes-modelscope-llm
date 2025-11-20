@@ -29,6 +29,18 @@ export class ModelScopeClient {
         }
     }
 
+	async createEmbedding(params: {
+		model: string;
+		input: string | string[];
+		encoding_format?: 'float' | 'base64';
+	}) {
+		try {
+			return await this.client.embeddings.create(params as any);
+		} catch (error: any) {
+			throw ModelScopeErrorHandler.handleApiError(error);
+		}
+	}
+
     async generateImage(params: {
         model: string;
         prompt: string;

@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/n8n-nodes-modelscope.svg)](https://badge.fury.io/js/n8n-nodes-modelscope)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-这是一个用于 [n8n](https://n8n.io/) 的 ModelScope API 集成节点包，提供双节点架构支持大语言模型、视觉模型和文生图模型的调用，以及 AI Agent/Chain 集成功能。
+这是一个用于 [n8n](https://n8n.io/) 的 ModelScope API 集成节点包，提供双节点架构支持大语言模型、视觉模型、文生图与向量化（Embedding）模型的调用，以及 AI Agent/Chain 集成功能。
 
 ## 节点架构
 
@@ -14,6 +14,7 @@
 - 🤖 **大语言模型 (LLM)**: 支持对话完成，包括 Qwen、GLM、DeepSeek 等主流模型
 - 👁️ **视觉模型 (Vision)**: 支持图像理解和视觉问答
 - 🎨 **文生图模型 (Image)**: 支持文本到图像的生成，包括 Qwen-Image 等模型
+- 📈 **向量化模型 (Embedding)**: 支持文本向量生成，现已集成 Qwen/Qwen3-Embedding-8B，并支持批量输入
 - ⚡ **异步处理**: 支持文生图任务的异步处理和状态轮询
 
 ### 🔗 ModelScope Chat Model 节点
@@ -134,6 +135,42 @@ npm install n8n-nodes-modelscope
 }
 ```
 
+#### 向量化模型 (Embedding)
+
+支持将文本生成向量，可用于检索/存储/RAG 等场景：
+
+- **模型选择**: Qwen/Qwen3-Embedding-8B
+- **编码格式**: `float`（返回数值数组，适合直接检索/入库）或 `base64`（压缩传输/存档）
+- **批量模式**: 开启 `Batch Mode` 后可一次处理多条文本，输出的 `data` 与输入顺序一一对应
+
+**单条示例配置**:
+```json
+{
+  "resource": "embedding",
+  "operation": "createEmbedding",
+  "model": "Qwen/Qwen3-Embedding-8B",
+  "input": "你好",
+  "encodingFormat": "float"
+}
+```
+
+**批量示例配置**:
+```json
+{
+  "resource": "embedding",
+  "operation": "createEmbedding",
+  "model": "Qwen/Qwen3-Embedding-8B",
+  "batch": true,
+  "inputs": {
+    "item": [
+      { "text": "你好" },
+      { "text": "世界" }
+    ]
+  },
+  "encodingFormat": "float"
+}
+```
+
 ### ModelScope Chat Model 节点使用
 
 ModelScope Chat Model 节点专为 n8n AI 工作流设计，可与 AI Agent 和 AI Chain 节点无缝集成：
@@ -160,6 +197,20 @@ ModelScope Chat Model 节点专为 n8n AI 工作流设计，可与 AI Agent 和 
 - **Top P**: 核采样参数 (0.0-1.0)
 - **响应格式**: 文本或 JSON 格式
 - **推理努力**: 控制模型推理深度 (低/中/高)
+
+#### Embedding Pipeline 模式
+
+该节点新增 `Mode` 选择：
+
+- **Chat Model**: 输出 `Model`（语言模型）
+- **Embedding Pipeline**: 输出 `Chain`（包含向量管道）
+
+在 `Embedding Pipeline` 下：
+- **Embeddings Model**: 选择 `Qwen/Qwen3-Embedding-8B`
+- **Options/Top K**: 设置近邻数量（默认 5）
+- 输出 `Chain` 对象包含 `vectorStore` 与 `embeddings`，可在下游执行：
+  - 入库：`await chain.vectorStore.addTexts(["文本1","文本2"])`
+  - 检索：`const hits = await chain.vectorStore.similaritySearch("查询语句", chain.topK)`
 
 ## 支持的模型
 
@@ -188,6 +239,10 @@ ModelScope Chat Model 节点专为 n8n AI 工作流设计，可与 AI Agent 和 
 
 ### 文生图模型 (Image)
 - Qwen/Qwen-Image
+- 更多模型持续更新中...
+
+### 向量化模型 (Embedding)
+- Qwen/Qwen3-Embedding-8B
 - 更多模型持续更新中...
 
 ## 使用限制
@@ -234,15 +289,21 @@ n8n-nodes-modelscope/
 ├── nodes/
 │   ├── ModelScope/                     # 传统 API 调用节点
 │   │   ├── ModelScope.node.ts          # 主节点文件
-│   │   ├── ModelScopeApi.credentials.ts # API 凭证配置
+│   │   ├── utils/                       # 工具与常量
+│   │   │   ├── apiClient.ts
+│   │   │   ├── constants.ts
+│   │   │   └── errorHandler.ts
 │   │   └── resources/
 │   │       ├── llm/                    # 大语言模型资源
 │   │       ├── vision/                 # 视觉模型资源
-│   │       └── image/                  # 图像生成资源
+│   │       ├── image/                  # 图像生成资源
+│   │       └── embedding/              # 向量化资源
 │   └── ModelScopeChain/                # AI Agent/Chain 集成节点
 │       ├── ModelScopeChain.node.ts     # Chat Model 节点文件
 │       └── utils/
 │           └── loadModels.ts           # 模型加载工具
+├── credentials/
+│   └── ModelScopeApi.credentials.ts     # API 凭证配置
 ├── package.json                        # 项目配置
 ├── tsconfig.json                       # TypeScript 配置
 └── README.md                          # 项目文档

@@ -9,9 +9,11 @@ import {
 import { llmOperations, llmFields } from './resources/llm';
 import { visionOperations, visionFields } from './resources/vision';
 import { imageOperations, imageFields } from './resources/image';
+import { embeddingOperations, embeddingFields } from './resources/embedding';
 import { executeChatCompletion } from './resources/llm/chatCompletion.operation';
 import { executeVisionChat } from './resources/vision/visionChat.operation';
 import { executeTextToImage } from './resources/image/textToImage.operation';
+import { executeCreateEmbedding } from './resources/embedding/embedding.operation';
 import { MODELSCOPE_BASE_URL } from './utils/constants';
 
 export class ModelScope implements INodeType {
@@ -47,33 +49,40 @@ export class ModelScope implements INodeType {
 				name: 'resource',
 				type: 'options',
 				noDataExpression: true,
-				options: [
-					{
-						name: 'Large Language Model',
-						value: 'llm',
-						description: '大语言模型对话完成',
-					},
-					{
-						name: 'Vision Model',
-						value: 'vision',
-						description: '视觉多模态模型',
-					},
-					{
-						name: 'Text to Image',
-						value: 'image',
-						description: '文生图模型',
-					},
-				],
-				default: 'llm',
-			},
+					options: [
+						{
+							name: 'Large Language Model',
+							value: 'llm',
+							description: '大语言模型对话完成',
+						},
+						{
+							name: 'Vision Model',
+							value: 'vision',
+							description: '视觉多模态模型',
+						},
+						{
+							name: 'Text to Image',
+							value: 'image',
+							description: '文生图模型',
+						},
+						{
+							name: 'Embedding',
+							value: 'embedding',
+							description: '文本向量化',
+						},
+					],
+					default: 'llm',
+				},
 			// 动态加载操作选项
 			...llmOperations,
 			...visionOperations,
-			...imageOperations,
+				...imageOperations,
+				...embeddingOperations,
 			// 动态加载字段选项
 			...llmFields,
 			...visionFields,
-			...imageFields,
+				...imageFields,
+				...embeddingFields,
 		],
 	};
 
@@ -122,6 +131,18 @@ export class ModelScope implements INodeType {
 								throw new NodeOperationError(
 									this.getNode(),
 									`Unknown Image operation: ${operation}`,
+								);
+						}
+						break;
+					case 'embedding':
+						switch (operation) {
+							case 'createEmbedding':
+								responseData = await executeCreateEmbedding.call(this, i);
+								break;
+							default:
+								throw new NodeOperationError(
+									this.getNode(),
+									`Unknown Embedding operation: ${operation}`,
 								);
 						}
 						break;

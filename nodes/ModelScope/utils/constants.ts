@@ -20,6 +20,9 @@ export const SUPPORTED_MODELS = {
 	image: [
 		'Qwen/Qwen-Image',
 	],
+	embedding: [
+		'Qwen/Qwen3-Embedding-8B',
+	],
 };
 
 export const MODELSCOPE_BASE_URL = 'https://api-inference.modelscope.cn/v1';
