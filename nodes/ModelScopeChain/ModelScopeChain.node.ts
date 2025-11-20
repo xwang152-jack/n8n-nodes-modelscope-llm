@@ -125,18 +125,6 @@ export class ModelScopeChain implements INodeType {
 						type: 'string',
 					},
 					{
-						displayName: 'Top K',
-						name: 'topK',
-						default: 5,
-						description: 'Number of nearest neighbors to return',
-						type: 'number',
-						displayOptions: {
-							show: {
-								'/mode': ['embedding'],
-							},
-						},
-					},
-					{
 						displayName: 'Frequency Penalty',
 						name: 'frequencyPenalty',
 						default: 0,
@@ -262,6 +250,18 @@ export class ModelScopeChain implements INodeType {
 						type: 'number',
 					},
 					{
+						displayName: 'Top K',
+						name: 'topK',
+						default: 5,
+						description: 'Number of nearest neighbors to return',
+						type: 'number',
+						displayOptions: {
+							show: {
+								'/mode': ['embedding'],
+							},
+						},
+					},
+					{
 						displayName: 'Top P',
 						name: 'topP',
 						default: 1,
@@ -310,15 +310,18 @@ export class ModelScopeChain implements INodeType {
 			topK?: number;
 		};
 
-		if (mode === 'embedding') {
-			const embeddingsModel = this.getNodeParameter('embeddingsModel', itemIndex) as string;
-			const embeddings = new OpenAIEmbeddings({
-				apiKey: credentials.accessToken as string,
-				model: embeddingsModel,
-				configuration: {
-					baseURL: options.baseURL || MODELSCOPE_BASE_URL,
-				},
-			});
+        if (mode === 'embedding') {
+            const embeddingsModel = this.getNodeParameter('embeddingsModel', itemIndex) as string;
+            const embeddings = new OpenAIEmbeddings({
+                apiKey: credentials.accessToken as string,
+                // 兼容不同版本的字段名
+                // @ts-ignore
+                openAIApiKey: credentials.accessToken as string,
+                model: embeddingsModel,
+                configuration: {
+                    baseURL: options.baseURL || MODELSCOPE_BASE_URL,
+                },
+            });
 			const vectorStore = new MemoryVectorStore(embeddings);
 			const chain: any = {
 				vectorStore,
@@ -332,13 +335,15 @@ export class ModelScopeChain implements INodeType {
 
 		const modelName = this.getNodeParameter('model', itemIndex, '', { extractValue: true }) as string;
 
-		const config: any = {
-			apiKey: credentials.accessToken as string,
-			model: modelName,
-			configuration: {
-				baseURL: options.baseURL || MODELSCOPE_BASE_URL,
-			},
-		};
+        const config: any = {
+            apiKey: credentials.accessToken as string,
+            // 兼容不同版本的字段名
+            openAIApiKey: credentials.accessToken as string,
+            model: modelName,
+            configuration: {
+                baseURL: options.baseURL || MODELSCOPE_BASE_URL,
+            },
+        };
 
 		if (options.frequencyPenalty !== undefined) {
 			config.frequencyPenalty = options.frequencyPenalty;

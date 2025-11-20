@@ -36,7 +36,7 @@ export const embeddingFields: INodeProperties[] = [
             },
         },
         default: false,
-        description: '是否启用批量向量化',
+        description: 'Whether to enable batch embedding',
     },
     {
         displayName: 'Model',
