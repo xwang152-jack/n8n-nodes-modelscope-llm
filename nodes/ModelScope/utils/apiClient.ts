@@ -4,15 +4,24 @@ import { MODELSCOPE_BASE_URL } from './constants';
 import { ModelScopeErrorHandler } from './errorHandler';
 
 export class ModelScopeClient {
-    private client: OpenAI;
+    private client?: OpenAI;
     private accessToken: string;
 
     constructor(accessToken: string) {
-        this.accessToken = accessToken;
-        this.client = new OpenAI({
-            apiKey: accessToken,
-            baseURL: MODELSCOPE_BASE_URL,
-        });
+        this.accessToken = accessToken || '';
+    }
+
+    private getOpenAIClient() {
+        if (!this.accessToken || !this.accessToken.trim()) {
+            throw new Error('认证失败: Access Token 为空，请在凭据中配置 ModelScope Token');
+        }
+        if (!this.client) {
+            this.client = new OpenAI({
+                apiKey: this.accessToken,
+                baseURL: MODELSCOPE_BASE_URL,
+            });
+        }
+        return this.client;
     }
 
 	async chatCompletion(params: {
@@ -23,7 +32,8 @@ export class ModelScopeClient {
 		max_tokens?: number;
 	}) {
         try {
-            return await this.client.chat.completions.create(params);
+            const client = this.getOpenAIClient();
+            return await client.chat.completions.create(params);
         } catch (error: any) {
             throw ModelScopeErrorHandler.handleApiError(error);
         }
@@ -34,12 +44,13 @@ export class ModelScopeClient {
 		input: string | string[];
 		encoding_format?: 'float' | 'base64';
 	}) {
-		try {
-			return await this.client.embeddings.create(params as any);
-		} catch (error: any) {
-			throw ModelScopeErrorHandler.handleApiError(error);
-		}
-	}
+        try {
+            const client = this.getOpenAIClient();
+            return await client.embeddings.create(params as any);
+        } catch (error: any) {
+            throw ModelScopeErrorHandler.handleApiError(error);
+        }
+    }
 
     async generateImage(params: {
         model: string;
