@@ -61,7 +61,7 @@ export class ModelScopeChain implements INodeType {
 				name: 'mode',
 				type: 'options',
 				default: 'chat',
-				options: [
+                options: [
 					{ name: 'Chat Model', value: 'chat' },
 					{ name: 'Embedding Pipeline', value: 'embedding' },
 				],
@@ -207,28 +207,44 @@ export class ModelScopeChain implements INodeType {
 							},
 						},
 					},
-					{
-						displayName: 'Response Format',
-						name: 'responseFormat',
-						type: 'options',
-						default: 'text',
-						description: 'Response format type',
-						options: [
-							{
-								name: 'Text',
-								value: 'text',
-							},
-							{
-								name: 'JSON Object',
-								value: 'json_object',
-							},
-						],
-						displayOptions: {
-							show: {
-								'/mode': ['chat'],
-							},
-						},
-					},
+                    {
+                        displayName: 'Response Format',
+                        name: 'responseFormat',
+                        type: 'options',
+                        default: 'text',
+                        description: 'Response format type',
+                        options: [
+                            {
+                                name: 'Text',
+                                value: 'text',
+                            },
+                            {
+                                name: 'JSON Object',
+                                value: 'json_object',
+                            },
+                        ],
+                        displayOptions: {
+                            show: {
+                                '/mode': ['chat'],
+                            },
+                        },
+                    },
+                    {
+                        displayName: 'Tool Choice',
+                        name: 'toolChoice',
+                        type: 'options',
+                        default: 'auto',
+                        description: 'Control tool calling behavior when using agents/tools',
+                        options: [
+                            { name: 'Auto', value: 'auto' },
+                            { name: 'None', value: 'none' },
+                        ],
+                        displayOptions: {
+                            show: {
+                                '/mode': ['chat'],
+                            },
+                        },
+                    },
 					{
 						displayName: 'Sampling Temperature',
 						name: 'temperature',
@@ -313,6 +329,7 @@ export class ModelScopeChain implements INodeType {
 			timeout?: number;
 			topP?: number;
 			topK?: number;
+            toolChoice?: 'auto' | 'none';
 		};
 
         if (mode === 'embedding') {
@@ -365,18 +382,26 @@ export class ModelScopeChain implements INodeType {
 		if (options.reasoningEffort !== undefined) {
 			config.reasoningEffort = options.reasoningEffort;
 		}
-		if (options.responseFormat !== undefined) {
-			config.responseFormat = { type: options.responseFormat };
-		}
+        if (options.responseFormat !== undefined) {
+            config.responseFormat = { type: options.responseFormat };
+            config.modelKwargs = {
+                ...(config.modelKwargs || {}),
+                response_format: { type: options.responseFormat },
+            };
+        }
 		if (options.temperature !== undefined) {
 			config.temperature = options.temperature;
 		}
 		if (options.timeout !== undefined) {
 			config.timeout = options.timeout;
 		}
-		if (options.topP !== undefined) {
-			config.topP = options.topP;
-		}
+        if (options.topP !== undefined) {
+            config.topP = options.topP;
+        }
+
+        if (options.toolChoice !== undefined) {
+            config.toolChoice = options.toolChoice;
+        }
 
 		const model = new ChatOpenAI({
 			...config,

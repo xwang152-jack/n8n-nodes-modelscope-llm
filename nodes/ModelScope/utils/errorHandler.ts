@@ -2,7 +2,11 @@ export class ModelScopeErrorHandler {
 	static handleApiError(error: any): Error {
 		if (error.response) {
 			const status = error.response.status;
-			const message = error.response.data?.error?.message || error.message;
+			const message =
+				error.response.data?.error?.message ||
+				error.response.data?.message ||
+				error.response.statusText ||
+				error.message;
 
 			switch (status) {
 				case 401:
@@ -14,7 +18,7 @@ export class ModelScopeErrorHandler {
 				case 500:
 					return new Error('ModelScope服务内部错误，请稍后重试');
 				default:
-					return new Error(`API调用失败 (${status}): ${message}`);
+					return new Error(`API调用失败 (${status}): ${message || '无详细错误信息'}`);
 			}
 		}
 
