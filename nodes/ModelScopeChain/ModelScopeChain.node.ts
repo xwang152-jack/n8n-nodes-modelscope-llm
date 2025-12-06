@@ -229,6 +229,27 @@ export class ModelScopeChain implements INodeType {
                             },
                         },
                     },
+					{
+						displayName: 'Sampling Temperature',
+						name: 'temperature',
+						default: 1,
+						typeOptions: { maxValue: 2, minValue: 0, numberPrecision: 1 },
+						description:
+							'Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.',
+						type: 'number',
+						displayOptions: {
+							show: {
+								'/mode': ['chat'],
+							},
+						},
+					},
+                    {
+                        displayName: 'Timeout',
+                        name: 'timeout',
+                        default: 60000,
+                        description: 'Maximum amount of time a request is allowed to take in milliseconds',
+                        type: 'number',
+                    },
                     {
                         displayName: 'Tool Choice',
                         name: 'toolChoice',
@@ -245,27 +266,6 @@ export class ModelScopeChain implements INodeType {
                             },
                         },
                     },
-					{
-						displayName: 'Sampling Temperature',
-						name: 'temperature',
-						default: 1,
-						typeOptions: { maxValue: 2, minValue: 0, numberPrecision: 1 },
-						description:
-							'Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.',
-						type: 'number',
-						displayOptions: {
-							show: {
-								'/mode': ['chat'],
-							},
-						},
-					},
-					{
-						displayName: 'Timeout',
-						name: 'timeout',
-						default: 60000,
-						description: 'Maximum amount of time a request is allowed to take in milliseconds',
-						type: 'number',
-					},
 					{
 						displayName: 'Top K',
 						name: 'topK',
